@@ -1,34 +1,15 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Finish : MonoBehaviour
 {
-    public GameObject winText;
+    public GameObject questionPanel;
 
-    private bool finished = false;
-
-    private void Start()
+    private void OnCollisionEnter(Collision collision)
     {
-        if (winText != null)
+        if (collision.gameObject.CompareTag("Player"))
         {
-            winText.SetActive(false);
+            Time.timeScale = 0f;
+            questionPanel.SetActive(true);
         }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player") && !finished)
-        {
-            finished = true;
-
-            winText.SetActive(true);
-
-            Invoke("LoadNextLevel", 3f);
-        }
-    }
-
-    void LoadNextLevel()
-    {
-        SceneManager.LoadScene(2);
     }
 }
