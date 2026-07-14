@@ -8,7 +8,18 @@ public class Finish : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            // Hentikan suara mesin
+            Car car = collision.gameObject.GetComponent<Car>();
+
+            if (car != null)
+            {
+                car.StopEngineAudio();
+            }
+
+            // Pause game
             Time.timeScale = 0f;
+
+            // Tampilkan panel soal
             questionPanel.SetActive(true);
         }
     }

@@ -13,6 +13,9 @@ namespace SoftTouchUIKit
         public GameObject pausePanel;
         private bool isPaused = false;
 
+        [Header("📖 Tutorial")]
+        public GameObject tutorialPanel;
+
         [Header("🔊 Audio Settings")]
         public Image audioButtonImage;
         public Sprite audioOnSprite;
@@ -31,7 +34,11 @@ namespace SoftTouchUIKit
         void Start ()
         {
             // Resets time scale to normal at the start of the game
-            Time.timeScale = 1f;
+            Time.timeScale = 0f;
+
+            // Tampilkan tutorial saat level dimulai
+            if (tutorialPanel != null)
+                tutorialPanel.SetActive(true);
 
             // Ensure the pause panel is hidden when the game starts
             if (pausePanel != null) pausePanel.SetActive(false);
@@ -68,6 +75,14 @@ namespace SoftTouchUIKit
             isPaused = false;
             Time.timeScale = 1f; // Resumes game to normal speed
             if (pausePanel != null) pausePanel.SetActive(false);
+        }
+
+        public void StartGame()
+        {
+            if (tutorialPanel != null)
+                tutorialPanel.SetActive(false);
+
+            Time.timeScale = 1f;
         }
 
         public void TogglePause ()

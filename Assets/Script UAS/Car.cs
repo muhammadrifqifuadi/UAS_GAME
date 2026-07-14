@@ -32,12 +32,17 @@ public class Car : MonoBehaviour
     public VehiclePedal leftPedal;
     public VehiclePedal rightPedal;
 
+    [Header("Engine Audio")]
+    [SerializeField] private AudioSource idleAudio;
+    [SerializeField] private AudioSource accelerateAudio;
+
     void FixedUpdate()
     {
         GetInput();
         HandleMotor();
         HandleSteering();
         UpdateWheels();
+        HandleEngineAudio();
     }
 
     void GetInput()
@@ -63,8 +68,18 @@ public class Car : MonoBehaviour
 
         if (brakePedal != null && brakePedal.isPressed)
         {
-            verticalInput = -1f;
-            isBraking = true;
+            float speed = GetComponent<Rigidbody>().linearVelocity.magnitude;
+
+            if (speed > 1f)
+            {
+                isBraking = true;
+                verticalInput = 0f;
+            }
+            else
+            {
+                isBraking = false;
+                verticalInput = -1f;
+            }
         }
     }
 
@@ -111,5 +126,47 @@ public class Car : MonoBehaviour
 
         wheelTransform.position = pos;
         wheelTransform.rotation = rot;
+    }
+    void Start()
+    {
+        if (idleAudio != null)
+        {
+            idleAudio.loop = true;
+            idleAudio.Play();
+        }
+
+        if (accelerateAudio != null)
+        {
+            accelerateAudio.loop = true;
+            accelerateAudio.Play();
+
+            // Awalnya tidak terdengar
+            accelerateAudio.volume = 0f;
+        }
+    }
+    void HandleEngineAudio()
+    {
+        bool gasPressed =
+            (gasPedal != null && gasPedal.isPressed) ||
+            Input.GetKey(KeyCode.W);
+
+        if (gasPressed)
+        {
+            idleAudio.volume = Mathf.Lerp(idleAudio.volume, 0.2f, Time.deltaTime * 5f);
+            accelerateAudio.volume = Mathf.Lerp(accelerateAudio.volume, 1f, Time.deltaTime * 5f);
+        }
+        else
+        {
+            idleAudio.volume = Mathf.Lerp(idleAudio.volume, 0.6f, Time.deltaTime * 5f);
+            accelerateAudio.volume = Mathf.Lerp(accelerateAudio.volume, 0f, Time.deltaTime * 5f);
+        }
+    }
+    public void StopEngineAudio()
+    {
+        if (idleAudio != null)
+            idleAudio.Stop();
+
+        if (accelerateAudio != null)
+            accelerateAudio.Stop();
     }
 }

@@ -27,7 +27,7 @@ public class QuestionManager : MonoBehaviour
         winPanel.SetActive(true);
 
         // Tampilkan jumlah koin
-        coinResultText.text = "Koin Terkumpul : " + CoinManager.Instance.GetCoin();
+        coinResultText.text = CoinManager.Instance.GetCoin().ToString();
 
         StartCoroutine(NextLevel());
     }

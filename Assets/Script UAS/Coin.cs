@@ -12,6 +12,9 @@ public class Coin : MonoBehaviour
         if (other.transform.root.CompareTag("Player"))
         {
             CoinManager.Instance.AddCoin(value);
+
+            TimerManager.Instance.AddTime(20f);
+            
             Destroy(gameObject);
         }
     }
